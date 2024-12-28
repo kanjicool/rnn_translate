@@ -1,0 +1,2 @@
+#!/bin/sh
+DEBUG=true poetry run rnn_translate-web -H 0.0.0.0 -d
