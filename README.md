@@ -10,6 +10,13 @@ Clone git
 Poetry Install เป็นการติดตั้ง library ร่วมถึง framework ที่ใช้งานในเว็ป
 
     poetry install
+
+install nodejs
+
+    sudo apt install nodejs -y
+    
+    sudo apt install npm
+
 เข้าไปที่ static ด้วย cd /rnn_translate/web/static
 
     npm install
