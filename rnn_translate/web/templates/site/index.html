@@ -1,1 +1,62 @@
-<h1>gg</h1>
+{% extends "/base/default-page.html" %}
+
+{% block content %}
+<div class="ui container" style="margin-top: 20px;">
+  <h2 class="ui header">Translation Page</h2>
+  <div class="ui grid">
+      <div class="sixteen wide column">
+          <div class="ui form">
+              <div class="two fields">
+                  <div class="field">
+                      <label>Source Language</label>
+                      <select class="ui dropdown" id="sourceLanguage">
+                          <option value="en">English</option>
+                          <option value="th">Thai</option>
+                          <option value="jp">Japanese</option>
+                      </select>
+                      <textarea id="sourceText" rows="6" placeholder="Enter text here..."></textarea>
+                  </div>
+                  <div class="field">
+                      <label>Target Language</label>
+                      <select class="ui dropdown" id="targetLanguage">
+                          <option value="en">English</option>
+                          <option value="th">Thai</option>
+                          <option value="jp">Japanese</option>
+                      </select>
+                      <textarea id="targetText" rows="6" placeholder="Translation will appear here..." readonly></textarea>
+                  </div>
+              </div>
+              <button class="ui primary button" id="translateButton">Translate</button>
+              <button class="ui button" id="clearButton">Clear</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+      $('.ui.dropdown').dropdown();
+
+      $('#translateButton').on('click', function () {
+          const sourceText = $('#sourceText').val();
+          const sourceLang = $('#sourceLanguage').val();
+          const targetLang = $('#targetLanguage').val();
+
+          if (!sourceText.trim()) {
+              alert('Please enter text to translate.');
+              return;
+          }
+
+          // Simulate translation logic (replace this with real API call if needed)
+          const translation = `Translated [${sourceLang}] to [${targetLang}]: ${sourceText}`;
+
+          $('#targetText').val(translation);
+      });
+
+      $('#clearButton').on('click', function () {
+          $('#sourceText, #targetText').val('');
+          $('#sourceLanguage, #targetLanguage').dropdown('clear');
+      });
+  });
+</script>
+{% endblock content %}
