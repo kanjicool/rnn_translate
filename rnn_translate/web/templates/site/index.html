@@ -24,7 +24,7 @@
                 </div>
               </div>
               <button class="ui primary button" id="translateButton">Translate</button>
-              <button class="ui button" id="clearButton">Clear</button>
+              <a class="ui button" id="clearButton" href="#">Clear</a>
           </form>
       </div>
   </div>
@@ -66,11 +66,8 @@
     });
 
     $('#clearButton').on('click', function () {
-        $('#sourceText, #targetText').val('');
-        $('select[name="source_language"], select[name="target_language"]').dropdown('clear');
+        location.reload(); // This will reload the page
     });
 });
-
-
 </script>
 {% endblock content %}
