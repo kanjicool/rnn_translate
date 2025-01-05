@@ -5,58 +5,72 @@
   <h2 class="ui header">Translation Page</h2>
   <div class="ui grid">
       <div class="sixteen wide column">
-          <div class="ui form">
+          <form class="ui form" method="post" action="{{ url_for('site.translate') }}">
+            {#{{ form.csrf_token }}#}
               <div class="two fields">
                   <div class="field">
-                      <label>Source Language</label>
-                      <select class="ui dropdown" id="sourceLanguage">
-                          <option value="en">English</option>
-                          <option value="th">Thai</option>
-                          <option value="jp">Japanese</option>
-                      </select>
-                      <textarea id="sourceText" rows="6" placeholder="Enter text here..."></textarea>
-                  </div>
-                  <div class="field">
-                      <label>Target Language</label>
-                      <select class="ui dropdown" id="targetLanguage">
-                          <option value="en">English</option>
-                          <option value="th">Thai</option>
-                          <option value="jp">Japanese</option>
-                      </select>
-                      <textarea id="targetText" rows="6" placeholder="Translation will appear here..." readonly></textarea>
-                  </div>
+                    <label>Source Language</label>
+                    <select class="ui dropdown" name="sourceLanguage" disabled>
+                        <option value="en" selected>English</option>
+                    </select>
+                    <textarea id="sourceText" rows="6" placeholder="Enter text here..."></textarea>
+                </div>
+                <div class="field">
+                    <label>Target Language</label>
+                    <select class="ui dropdown" name="targetLanguage" disabled>
+                        <option value="th" selected>Thai</option>
+                    </select>
+                    <textarea id="targetText" rows="6" placeholder="Translation will appear here..." readonly>{{ translated_text }}</textarea>
+                </div>
               </div>
               <button class="ui primary button" id="translateButton">Translate</button>
               <button class="ui button" id="clearButton">Clear</button>
-          </div>
+          </form>
       </div>
   </div>
 </div>
 
 <script>
   $(document).ready(function () {
-      $('.ui.dropdown').dropdown();
+    $('.ui.dropdown').dropdown();
 
-      $('#translateButton').on('click', function () {
-          const sourceText = $('#sourceText').val();
-          const sourceLang = $('#sourceLanguage').val();
-          const targetLang = $('#targetLanguage').val();
+    $('#translateButton').on('click', function (e) {
+        e.preventDefault();
 
-          if (!sourceText.trim()) {
-              alert('Please enter text to translate.');
-              return;
-          }
+        const csrfToken = $('input[name="csrf_token"]').val(); // อ่าน CSRF token
+        const sourceText = $('#sourceText').val();
+        const sourceLang = $('select[name="source_language"]').val();
+        const targetLang = $('select[name="target_language"]').val();
 
-          // Simulate translation logic (replace this with real API call if needed)
-          const translation = `Translated [${sourceLang}] to [${targetLang}]: ${sourceText}`;
+        if (!sourceText.trim()) {
+            alert('Please enter text to translate.');
+            return;
+        }
 
-          $('#targetText').val(translation);
-      });
+        $.ajax({
+            url: "{{ url_for('site.translate') }}",
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },
+            data: {
+                source_language: sourceLang,
+                target_language: targetLang,
+                source_text: sourceText
+            },
+            success: function (response) {
+                $('#targetText').val(response.translated_sequence);
+            },
+            error: function (xhr) {
+                alert(`Translation failed: ${xhr.responseJSON.error || 'Unexpected error occurred.'}`);
+            }
+        });
+    });
 
-      $('#clearButton').on('click', function () {
-          $('#sourceText, #targetText').val('');
-          $('#sourceLanguage, #targetLanguage').dropdown('clear');
-      });
-  });
+    $('#clearButton').on('click', function () {
+        $('#sourceText, #targetText').val('');
+        $('select[name="source_language"], select[name="target_language"]').dropdown('clear');
+    });
+});
+
+
 </script>
 {% endblock content %}

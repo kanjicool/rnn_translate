@@ -16,6 +16,8 @@ Flask-Caching = "^2.3.0"
 Flask-Bcrypt = "^1.0.1"
 Flask-WTF = "^1.2.2"
 flake8 = "^3.9.2"
+tensorflow = "^2.18.0"
+sentencepiece = "^0.2.0"
 
 [tool.poetry.scripts]
 rnn_translate-web = "rnn_translate.cmd.web:main"
